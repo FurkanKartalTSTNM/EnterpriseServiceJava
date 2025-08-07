@@ -21,13 +21,16 @@ public class ApiTest {
     }
 
     @Test
-    public void testGetAllPosts() {
+    public void testGetAllPosts() throws InterruptedException {
         HttpResponse<JsonNode> response = Unirest.get("https://jsonplaceholder.typicode.com/posts")
-                .asJson();
+            .asJson();
+
+        // 20 saniye bekleme
+        Thread.sleep(20000);
 
         assertEquals(200, response.getStatus());
         assertTrue(response.getBody().getArray().length() > 0);
-    }
+}
 
     @Test
     public void testCreatePost() {
