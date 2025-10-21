@@ -5,11 +5,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class ApiTest {
 
     @Test
     public void testGetRequest() {
+        boolean shouldRun = checkServiceHealth();
+        assumeTrue(shouldRun, "Skipping test because API is not reachable");
+
         HttpResponse<JsonNode> response = Unirest.get("https://jsonplaceholder.typicode.com/posts/1")
                 .asJson();
 
@@ -18,6 +22,15 @@ public class ApiTest {
         System.out.println(body.toString());
 
         assertEquals(1, body.getObject().getInt("id"));
+    }
+
+    private boolean checkServiceHealth() {
+        try {
+            int status = Unirest.get("https://jsonplaceholder.typicode.com/posts/1").asJson().getStatus();
+            return status == 200;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Test
