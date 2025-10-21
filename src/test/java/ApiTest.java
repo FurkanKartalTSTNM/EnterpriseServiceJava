@@ -183,6 +183,11 @@ public class ApiTest {
 
     @Test
     public void testGetRequest1() {
+        String key = System.getProperty("key");
+        boolean shouldRun = (key == null || key.isEmpty()); // key varsa skip et
+
+        assumeTrue(shouldRun, "Skipping test because key parameter is provided");
+
         HttpResponse<JsonNode> response = Unirest.get("https://jsonplaceholder.typicode.com/posts/1")
                 .asJson();
 
